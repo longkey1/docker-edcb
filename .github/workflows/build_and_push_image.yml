@@ -12,7 +12,7 @@ jobs:
       packages: write
     env:
       IMAGE_NAME: edcb
-      EDCB_BRANCH: work-plus-s-250816
+      EDCB_RELEASE: work-plus-s-250816
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -40,4 +40,4 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest
             ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ env.EDCB_BRANCH }}
           build-args: |
-            EDCB_BRANCH=${{ env.EDCB_BRANCH }}
+            EDCB_BRANCH=${{ env.EDCB_RELEASE }}

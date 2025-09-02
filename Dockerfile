@@ -13,9 +13,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # EDCBのビルド
-ARG EDCB_BRANCH
+ARG EDCB_RELEASE
 WORKDIR /tmp
-RUN git clone -b $(EDCB_BRANCH) --depth=1 \
+RUN git clone --branch $(EDCB_RELEASE) --depth=1 \
     https://github.com/xtne6f/EDCB.git
 WORKDIR /tmp/EDCB/Document/Unix
 RUN make -j "$(nproc)" && \
