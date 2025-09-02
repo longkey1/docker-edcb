@@ -38,6 +38,6 @@ jobs:
           push: true
           tags: |
             ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest
-            ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ env.EDCB_BRANCH }}
+            ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ env.EDCB_RELEASE }}
           build-args: |
             EDCB_BRANCH=${{ env.EDCB_RELEASE }}
