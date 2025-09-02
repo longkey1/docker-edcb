@@ -12,7 +12,7 @@ jobs:
       packages: write
     env:
       IMAGE_NAME: edcb
-      EDCB_BRANCH: work-plus-s-250531
+      EDCB_BRANCH: work-plus-s-250816
     steps:
       - name: Checkout
         uses: actions/checkout@v4
