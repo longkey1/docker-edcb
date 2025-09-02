@@ -40,4 +40,4 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest
             ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ env.EDCB_RELEASE }}
           build-args: |
-            EDCB_BRANCH=${{ env.EDCB_RELEASE }}
+            EDCB_RELEASE=${{ env.EDCB_RELEASE }}
