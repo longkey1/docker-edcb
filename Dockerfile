@@ -61,6 +61,13 @@ RUN mkdir -p /var/local/edcb && \
     chmod 777 /var/local/edcb
 COPY --from=builder /var/local/edcb/ /var/local/edcb/
 
+# 地上波のみの BonDriver_LinuxMirakc_T と BS/CSのみのBonDriver_LinuxMirakc_S という（仮想）BonDriverに分割する作業を行います
+# https://www.megadriver.info/2025/06/bondriver_linuxmirakc-%E3%81%AE%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/
+RUN ln -s /usr/local/lib/edcb/BonDriver_LinuxMirakc.so /usr/local/lib/edcb/BonDriver_LinuxMirakc_T.so
+RUN ln -s /usr/local/lib/edcb/BonDriver_LinuxMirakc.so /usr/local/lib/edcb/BonDriver_LinuxMirakc_S.so
+RUN ln -s /usr/local/lib/edcb/BonDriver_LinuxMirakc.so.ini /usr/local/lib/edcb/BonDriver_LinuxMirakc_T.so.ini
+RUN ln -s /usr/local/lib/edcb/BonDriver_LinuxMirakc.so.ini /usr/local/lib/edcb/BonDriver_LinuxMirakc_S.so.ini
+
 # デバッグ用に移動しておく
 WORKDIR /var/local/edcb
 
