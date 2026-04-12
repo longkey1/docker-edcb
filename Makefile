@@ -17,11 +17,14 @@ release: ## Release a new build. Usage: make release [dryrun=false]
 	@echo "Current tag    : $(if $(LATEST_TAG),$(LATEST_TAG),(none))"
 	@echo "Next tag       : $(NEXT_TAG)"
 	@if [ "$(dryrun)" = "false" ]; then \
+		echo "Pushing to origin/master..."; \
+		git push origin master --no-verify --force-with-lease; \
 		echo "Creating tag $(NEXT_TAG)..."; \
 		git tag -a $(NEXT_TAG) -m "Release $(NEXT_TAG)"; \
 		git push origin $(NEXT_TAG); \
 		echo "Tag $(NEXT_TAG) created and pushed."; \
 	else \
+		echo "[DRY RUN] Would push to origin/master"; \
 		echo "[DRY RUN] Would create and push tag: $(NEXT_TAG)"; \
 		echo ""; \
 		echo "To execute, run:"; \
