@@ -12,10 +12,12 @@ jobs:
       packages: write
     env:
       IMAGE_NAME: edcb
-      EDCB_RELEASE: work-plus-s-250816
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Read EDCB release
+        run: echo "EDCB_RELEASE=$(cat .edcb-release | tr -d '[:space:]')" >> $GITHUB_ENV
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
