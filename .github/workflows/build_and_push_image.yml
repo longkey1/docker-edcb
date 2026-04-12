@@ -1,9 +1,10 @@
 name: build_and_publish_image
+run-name: ${{ github.ref_name }}
 
 on:
   push:
-    branches:
-      - master
+    tags:
+      - "*-[0-9]*"
 
 jobs:
   build_and_publish_image:
@@ -20,37 +21,33 @@ jobs:
         run: echo "EDCB_RELEASE=$(cat .edcb-release | tr -d '[:space:]')" >> $GITHUB_ENV
 
       - name: Login to Docker Hub
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Pull binfmt image
-        run: docker pull tonistiigi/binfmt:latest
-
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-        with:
-          image: tonistiigi/binfmt:latest
+        uses: docker/setup-qemu-action@v4
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
             ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest
-            ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ env.EDCB_RELEASE }}
+            ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ env.EDCB_RELEASE }}-latest
+            ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}
           build-args: |
             EDCB_RELEASE=${{ env.EDCB_RELEASE }}

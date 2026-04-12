@@ -62,4 +62,4 @@ docker build --build-arg EDCB_RELEASE=$(cat .edcb-release) -t edcb .
 
 ## CI/CD
 
-`master` ブランチへのプッシュ時に GitHub Actions が自動的にビルドし、GitHub Container Registry へイメージを公開します。`.edcb-release` の内容がイメージタグにも使用されます。
+`*-[0-9]*` パターンにマッチするタグのプッシュ時に GitHub Actions が自動的にビルドし、GitHub Container Registry へイメージを公開します。`.edcb-release` の内容がイメージタグにも使用されます。
