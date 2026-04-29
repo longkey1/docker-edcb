@@ -22,10 +22,13 @@ release: ## Release a new build. Usage: make release [dryrun=false]
 		echo "Creating tag $(NEXT_TAG)..."; \
 		git tag -a $(NEXT_TAG) -m "Release $(NEXT_TAG)"; \
 		git push origin $(NEXT_TAG); \
-		echo "Tag $(NEXT_TAG) created and pushed."; \
+		echo "Creating GitHub release $(NEXT_TAG)..."; \
+		gh release create $(NEXT_TAG) --title "Release $(NEXT_TAG)" --notes ""; \
+		echo "Release $(NEXT_TAG) created."; \
 	else \
 		echo "[DRY RUN] Would push to origin/master"; \
 		echo "[DRY RUN] Would create and push tag: $(NEXT_TAG)"; \
+		echo "[DRY RUN] Would create GitHub release: $(NEXT_TAG)"; \
 		echo ""; \
 		echo "To execute, run:"; \
 		echo "  make release dryrun=false"; \
@@ -43,6 +46,8 @@ re-release: ## Re-release an existing tag. Usage: make re-release [tag=<tag>] [d
 	fi; \
 	echo "Target tag: $$TAG"; \
 	if [ "$(dryrun)" = "false" ]; then \
+		echo "Deleting GitHub release..."; \
+		gh release delete "$$TAG" --yes || true; \
 		echo "Deleting local tag..."; \
 		git tag -d "$$TAG"; \
 		echo "Deleting remote tag..."; \
@@ -50,6 +55,8 @@ re-release: ## Re-release an existing tag. Usage: make re-release [tag=<tag>] [d
 		echo "Recreating tag at HEAD..."; \
 		git tag -a "$$TAG" -m "Release $$TAG"; \
 		git push origin "$$TAG"; \
+		echo "Creating GitHub release $$TAG..."; \
+		gh release create "$$TAG" --title "Release $$TAG" --notes ""; \
 		echo "Done!"; \
 	else \
 		echo "[DRY RUN] Would re-release tag: $$TAG"; \
