@@ -6,9 +6,9 @@
 
 以下のコンポーネントをまとめたイメージです：
 
-- **EDCB** - EPG 取得・録画ソフトウェア
-- **EDCB Material WebUI** - EDCB 向けモダン Web UI
-- **BonDriver_LinuxMirakc** - [Mirakc](https://github.com/mirakc/mirakc) 連携用 Linux チューナードライバー
+- **[EDCB](https://github.com/xtne6f/EDCB)** - EPG 取得・録画ソフトウェア
+- **[EDCB Material WebUI](https://github.com/EMWUI/EDCB_Material_WebUI)** - EDCB 向けモダン Web UI
+- **[BonDriver_LinuxMirakc](https://github.com/matching/BonDriver_LinuxMirakc)** - [Mirakc](https://github.com/mirakc/mirakc) 連携用 Linux チューナードライバー
 
 ## 対応プラットフォーム
 
