@@ -28,8 +28,14 @@ RUN make -j "$(nproc)" && \
         /var/local/edcb/HttpPublic/legacy/util.lua
 
 # EDCB Material WebUIのインストール
+ARG EMWUI_COMMIT
 WORKDIR /tmp
-RUN git clone --depth=1 https://github.com/EMWUI/EDCB_Material_WebUI.git
+RUN test -n "${EMWUI_COMMIT}" && \
+    git init EDCB_Material_WebUI && \
+    cd EDCB_Material_WebUI && \
+    git remote add origin https://github.com/EMWUI/EDCB_Material_WebUI.git && \
+    git fetch --depth=1 origin "${EMWUI_COMMIT}" && \
+    git checkout --detach FETCH_HEAD
 WORKDIR /tmp/EDCB_Material_WebUI
 RUN cp -r HttpPublic /var/local/edcb/ && \
     cp -r Setting /var/local/edcb/

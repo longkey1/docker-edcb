@@ -2,11 +2,9 @@
 
 EDCB_RELEASE := $(shell cat .edcb-release | tr -d '[:space:]')
 
-# Get the latest tag matching <edcb-release>-<number> pattern
-LATEST_TAG     := $(shell git tag --sort=-v:refname | grep -E "^$(EDCB_RELEASE)-[0-9]+$$" | head -n1)
-LATEST_BUILD   := $(shell echo "$(LATEST_TAG)" | sed 's/.*-//')
-NEXT_BUILD     := $(shell if [ -n "$(LATEST_BUILD)" ]; then expr $(LATEST_BUILD) + 1; else echo 1; fi)
-NEXT_TAG       := $(EDCB_RELEASE)-$(NEXT_BUILD)
+EMWUI_COMMIT   := $(shell cat .emwui-commit | tr -d '[:space:]')
+EMWUI_SHORT    := $(shell printf '%s' '$(EMWUI_COMMIT)' | cut -c1-7)
+NEXT_TAG       := $(EDCB_RELEASE)-$(EMWUI_SHORT)
 
 dryrun ?= true
 tag    ?=
@@ -14,9 +12,10 @@ tag    ?=
 .PHONY: release
 release: ## Release a new build. Usage: make release [dryrun=false]
 	@echo "edcb release   : $(EDCB_RELEASE)"
-	@echo "Current tag    : $(if $(LATEST_TAG),$(LATEST_TAG),(none))"
+	@printf '%s\n' '$(EMWUI_COMMIT)' | grep -Eq '^[0-9a-f]{40}$$' || { echo "Error: .emwui-commit must contain a full commit hash."; exit 1; }
+	@echo "EMWUI commit   : $(EMWUI_COMMIT)"
 	@echo "Next tag       : $(NEXT_TAG)"
-	@if [ "$(dryrun)" = "false" ]; then \
+	@set -e; if [ "$(dryrun)" = "false" ]; then \
 		echo "Pushing to origin/master..."; \
 		git push origin master --no-verify --force-with-lease; \
 		echo "Creating tag $(NEXT_TAG)..."; \
@@ -36,12 +35,16 @@ release: ## Release a new build. Usage: make release [dryrun=false]
 
 .PHONY: re-release
 re-release: ## Re-release an existing tag. Usage: make re-release [tag=<tag>] [dryrun=false]
-	@TAG="$(tag)"; \
+	@set -e; TAG="$(tag)"; \
 	if [ -z "$$TAG" ]; then \
-		TAG=$$(git describe --tags --abbrev=0 2>/dev/null); \
+		TAG=$$(git describe --tags --abbrev=0 2>/dev/null || true); \
 	fi; \
 	if [ -z "$$TAG" ]; then \
 		echo "Error: No tag found. Specify with tag=<tag>."; \
+		exit 1; \
+	fi; \
+	if [ "$$TAG" != "$(NEXT_TAG)" ]; then \
+		echo "Error: Tag must match the configured versions: $(NEXT_TAG)"; \
 		exit 1; \
 	fi; \
 	echo "Target tag: $$TAG"; \
